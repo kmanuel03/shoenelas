@@ -28,40 +28,35 @@ function create_trivia_table() {
 register_activation_hook(__FILE__, 'create_trivia_table');
 
 
-//Display trivia modal if the user logs in else display hola!
-require_once(plugin_dir_path(__FILE__).'/includes/trivia-scripts.php');
-add_action('wp_body_open', 'show_trivia_modal');
-
-function show_trivia_modal() {
-    if(is_user_logged_in()) {
-        require_once('includes/trivia-modal.php');
-    } else {
-        echo "<h3 class='hola-text'>Hola! Welcome to ". get_bloginfo()." :) </h3>";
-    }
-
-}
-
-add_action('wp_print_styles', 'hola_style');
-function hola_style() {
-    echo '<style>h3.hola-text{color:#000e14; background: palevioletred; padding: 20px; margin: 0; text-align: center}</style>';
-}
-
+//create a page on admin site
 function trivia_plugin_page() {
     $page_title = 'Trivia of the Day';
     $menu_title = 'Trivia';
     $capability = 'manage_options';
     $slug = 'trivia-plugin';
     $callback = 'trivia_page_html';
-    $icon = 'dashicons-schedule';
+    $icon = 'dashicons-lightbulb';
     $position = 60;
 
     add_menu_page($page_title, $menu_title, $capability, $slug, $callback, $icon, $position);
-
 }
 
 add_action('admin_menu', 'trivia_plugin_page');
-
 function trivia_page_html() {
     require_once('includes/trivia-form.php');
 }
+
+//add styling scripts
+require_once(plugin_dir_path(__FILE__).'/includes/trivia-scripts.php');
+
+//add trivia modal to the body
+add_action('wp_body_open', 'show_trivia_modal');
+function show_trivia_modal()
+{
+    if (is_user_logged_in()) {
+        require_once('includes/trivia-modal.php');
+    }
+
+}
+
 
